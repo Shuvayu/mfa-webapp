@@ -10,19 +10,7 @@ namespace MFA.Controllers
     {
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Recognising faces with the help of Microsoft Cognitive Services APIs";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Shuvayu Dhar";
+            ViewData["Message"] = "Upload Image";
 
             return View();
         }
