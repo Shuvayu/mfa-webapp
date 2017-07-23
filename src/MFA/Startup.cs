@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MFA.IService;
 using MFA.Service;
+using MFA.Entities;
 
 namespace MFA
 {
@@ -32,6 +33,11 @@ namespace MFA
             // Add framework services.
             services.AddMvc();
 
+            services.AddOptions();
+
+            // Register the IConfiguration instance which MyOptions binds against.
+            services.Configure<AzureConfiguration>(Configuration.GetSection("AzureConfiguration"));
+            
             // Add Application services
             services.AddTransient<IImageStorageService, ImageStorageService>();
             services.AddTransient<IImageRecognitionService, ImageRecognitionService>();
