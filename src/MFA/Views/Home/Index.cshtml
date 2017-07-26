@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Image Facial Recognition";
+    ViewData["Title"] = "Image Facial Recognition App";
 }
 <h2>@ViewData["Title"].</h2>
 <h3>@ViewData["Message"]</h3>
@@ -14,34 +14,42 @@
                         <input type="file" name="file" />
                     </div>
                     <div class="col-md-3">
-                        <input id="facialReco" type="button" value="Intialise Facial Recognition" />
+                        <input id="facialReco" type="submit" value="Intialise Upload For Facial Recognition" />
                     </div>
                 </form>
             </div>
-            <img id="uploadedImage" src="#" />
+            <br/>
+            <div class="container">
+                <br/>
+                <p id="imageChoosenText">Image Choosen is ...</p>
+                <div class="col-md-4" style="padding-left: 0px;  padding-right: 0px;">
+                    <img class="img-responsive" id="uploadedImage" src="#" />
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-@section scripts{
-    <script>
-        $('#uploadedImage').hide();
-        $('#facialReco').hide();
+    @section scripts{
+        <script>
+            $('#uploadedImage').hide();
+            $('#facialReco').hide();
+            $('#imageChoosenText').hide();
 
-        $(function () {
-            $(":file").change(function () {
-                if (this.files && this.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = imageHasBeenLoaded;
-                    reader.readAsDataURL(this.files[0]);
-                }
+            $(function () {
+                $(":file").change(function () {
+                    if (this.files && this.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = imageHasBeenLoaded;
+                        reader.readAsDataURL(this.files[0]);
+                    }
+                });
             });
-        });
 
-        function imageHasBeenLoaded(e) {
-            $('#uploadedImage').attr('src', e.target.result);
-            $('#uploadedImage').show();
-            $('#facialReco').show();
-        };
-    </script>
-}
+            function imageHasBeenLoaded(e) {
+                $('#uploadedImage').attr('src', e.target.result);
+                $('#uploadedImage').show();
+                $('#facialReco').show();
+                $('#imageChoosenText').show();
+            };
+        </script>
+    }

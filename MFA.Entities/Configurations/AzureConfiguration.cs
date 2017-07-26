@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MFA.Entities
+namespace MFA.Entities.Confugurations
 {
     public class AzureConfiguration
     {

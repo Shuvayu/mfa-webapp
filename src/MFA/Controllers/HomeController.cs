@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MFA.IService;
 using Microsoft.AspNetCore.Http;
+using MFA.Entities.ViewModels;
 
 namespace MFA.Controllers
 {
@@ -40,8 +41,11 @@ namespace MFA.Controllers
         public IActionResult Display(string imageId)
         {
             ViewData["Message"] = "Uploaded Image";
-
-            return View();
+            DisplayViewModel actionModel = new DisplayViewModel()
+            {
+                ImageUrl = _imageStore.ImageLink(imageId)
+            };
+            return View(actionModel);
         }
 
         public IActionResult Error()

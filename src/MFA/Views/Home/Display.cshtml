@@ -1,0 +1,14 @@
+﻿@model MFA.Entities.ViewModels.DisplayViewModel 
+@{
+    ViewData["Title"] = "Image Facial Recognition App";
+}
+<h2>@ViewData["Title"].</h2>
+<h3>@ViewData["Message"]</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8" style="padding-left: 0px;  padding-right: 0px;">
+            <img class="img-responsive" src="@Model.ImageUrl" alt="Uploaded Image" />
+        </div>
+    </div>
+</div>         
