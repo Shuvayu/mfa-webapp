@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using MFA.Entities.ViewModels;
 using MFA.IService;
 using Microsoft.AspNetCore.Http;
-using MFA.Entities.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace MFA.Controllers
 {

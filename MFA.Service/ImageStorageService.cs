@@ -13,7 +13,6 @@ namespace MFA.Service
     {
         private readonly IOptions<AzureConfiguration> _azureSettings;
         private readonly Uri _baseBlobUri;
-        private readonly CloudBlockBlob _blob;
         private readonly CloudBlobClient _blobClient;
         private readonly CloudBlobContainer _container;
         public ImageStorageService(IOptions<AzureConfiguration> azureSettings)
