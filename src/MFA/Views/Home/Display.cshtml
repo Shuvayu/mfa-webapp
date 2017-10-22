@@ -1,4 +1,4 @@
-﻿@model MFA.Entities.ViewModels.DisplayViewModel 
+﻿@model MFA.Entities.ViewModels.DisplayViewModel
 @{
     ViewData["Title"] = "Image Facial Recognition App";
 }
@@ -6,12 +6,38 @@
 <h3>@ViewData["Message"]</h3>
 
 <div class="container">
-    <div class="row">
-
+    <div class="pull-right row" style="">
+        <button id="emotion-button-trigger"> Emotional Analysis</button>
+        <button id="facial-button-trigger"> Facial Analysis</button>
     </div>
     <div class="row">
         <div class="col-md-8" style="padding-left: 0px;  padding-right: 0px;">
             <img class="img-responsive" src="@Model.ImageUrl" alt="Uploaded Image" />
         </div>
+        <div class="col-md-4 pull-right">
+            <p id="textResults"></p>
+        </div>
     </div>
-</div>         
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#facial-button-trigger').hide();
+            $("#emotion-button-trigger").click(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: 'api/imageAnalysis/emotionalAnalysis?Uri=@Model.ImageUrl',
+
+                    success: function (msg) {
+                        alert("Msg: " + msg);
+                    },
+                    error: function (request, status, error) {
+                        alert(error);
+                    }
+                });
+            });
+        });
+        
+       
+    </script>
+}

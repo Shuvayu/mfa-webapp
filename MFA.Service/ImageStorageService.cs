@@ -28,8 +28,8 @@ namespace MFA.Service
             var sasPolicy = new SharedAccessBlobPolicy
             {
                 Permissions = SharedAccessBlobPermissions.Read,
-                SharedAccessStartTime = DateTime.Now.AddMinutes(-10),
-                SharedAccessExpiryTime = DateTime.Now.AddMinutes(15)
+                SharedAccessStartTime = DateTime.Now.AddMinutes(-1450),
+                SharedAccessExpiryTime = DateTime.Now.AddMinutes(30)
             };
             var blob = _container.GetBlockBlobReference(imageId);
             var sasToken = blob.GetSharedAccessSignature(sasPolicy);

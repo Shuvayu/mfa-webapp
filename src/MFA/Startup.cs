@@ -29,10 +29,10 @@ namespace MFA
 
             // Register the IConfiguration instance which MyOptions binds against.
             services.Configure<AzureConfiguration>(Configuration.GetSection("AzureConfiguration"));
-            
+
             // Add Application services
             services.AddTransient<IImageStorageService, ImageStorageService>();
-            services.AddTransient<IImageRecognitionService, ImageRecognitionService>();
+            services.AddTransient<IImageAnalysisService, ImageAnalysisService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +55,10 @@ namespace MFA
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                    "OnlyAction",
+                    "{action}",
+                    new { controller = "Home", action = "Index" });
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

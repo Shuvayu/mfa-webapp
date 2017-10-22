@@ -1,20 +1,22 @@
 ﻿using MFA.Entities.Confugurations;
 using MFA.Entities.Constants;
+using MFA.Entities.LogicModels;
 using MFA.IService;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MFA.Service
 {
-    public class ImageRecognitionService : IImageRecognitionService
+    public class ImageAnalysisService : IImageAnalysisService
     {
         private readonly IOptions<AzureConfiguration> _azureSettings;
 
-        public ImageRecognitionService(IOptions<AzureConfiguration> azureSettings)
+        public ImageAnalysisService(IOptions<AzureConfiguration> azureSettings)
         {
             _azureSettings = azureSettings;
         }
@@ -32,8 +34,9 @@ namespace MFA.Service
             request.Headers.Add("Ocp-Apim-Subscription-Key", _azureSettings.Value.CognitiveServicesEmotionApiHeaderKey);
             request.Content = new StringContent(data, Encoding.UTF8, MediaTypes.ApplicationJson);
 
-            var respone = await client.SendAsync(request);
-            var result = await request.Content.ReadAsStringAsync();
+            var response = await client.SendAsync(request);
+            var result = await response.Content.ReadAsStringAsync();
+            var model = JsonConvert.DeserializeObject<List<EmotionResponse>>(result);
             return result;
         }
 
