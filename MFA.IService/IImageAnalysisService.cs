@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MFA.Entities.LogicModels;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MFA.IService
@@ -10,13 +12,13 @@ namespace MFA.IService
         /// </summary>
         /// <param name="uri"></param>
         /// <returns></returns>
-        Task<string> GetEmotionalAnalysis(Uri uri);
+        Task<List<EmotionResponse>> GetEmotionalAnalysisAsync(Uri uri);
 
         /// <summary>
         /// Gets the facial analysis of the blob uri
         /// </summary>
         /// <param name="uri"></param>
         /// <returns></returns>
-        Task<string> GetFacialAnalysis(Uri uri);
+        Task<string> GetFacialAnalysisAsync(Uri uri);
     }
 }

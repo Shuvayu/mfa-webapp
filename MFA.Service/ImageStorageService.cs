@@ -1,4 +1,4 @@
-﻿using MFA.Entities.Confugurations;
+﻿using MFA.Entities.Configurations;
 using MFA.IService;
 using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage.Auth;

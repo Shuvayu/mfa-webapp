@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\MFA.Entities\MFA.Entities.csproj" />
+    <ProjectReference Include="..\..\MFA.Infrastructure\MFA.Infrastructure.csproj" />
     <ProjectReference Include="..\..\MFA.IService\MFA.IService.csproj" />
     <ProjectReference Include="..\..\MFA.Service\MFA.Service.csproj" />
   </ItemGroup>

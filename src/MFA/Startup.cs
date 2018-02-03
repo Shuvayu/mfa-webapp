@@ -1,4 +1,6 @@
-﻿using MFA.Entities.Confugurations;
+﻿using MFA.Entities.Configurations;
+using MFA.IInfrastructure;
+using MFA.Infrastructure;
 using MFA.IService;
 using MFA.Service;
 using Microsoft.AspNetCore.Builder;
@@ -28,7 +30,9 @@ namespace MFA
             services.AddOptions();
 
             // Register the IConfiguration instance which MyOptions binds against.
-            services.Configure<AzureConfiguration>(Configuration.GetSection("AzureConfiguration"));
+            services.Configure<AzureConfiguration>(Configuration.GetSection(nameof(AzureConfiguration)));
+
+            services.AddSingleton<IHttpClientsFactory, HttpClientsFactory>();
 
             // Add Application services
             services.AddTransient<IImageStorageService, ImageStorageService>();

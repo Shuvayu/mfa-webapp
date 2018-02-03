@@ -1,6 +1,7 @@
-﻿using MFA.Entities.Confugurations;
+﻿using MFA.Entities.Configurations;
 using MFA.Entities.Constants;
 using MFA.Entities.LogicModels;
+using MFA.IInfrastructure;
 using MFA.IService;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -15,15 +16,30 @@ namespace MFA.Service
     public class ImageAnalysisService : IImageAnalysisService
     {
         private readonly IOptions<AzureConfiguration> _azureSettings;
+        private readonly IHttpClientsFactory _httpClient;
 
-        public ImageAnalysisService(IOptions<AzureConfiguration> azureSettings)
+        public ImageAnalysisService(IOptions<AzureConfiguration> azureSettings, IHttpClientsFactory httpClientsFactory)
         {
             _azureSettings = azureSettings;
+            _httpClient = httpClientsFactory;
+
         }
 
-        public async Task<string> GetEmotionalAnalysis(Uri uri)
+        #region GetEmotionalAnalysisAsync
+        public async Task<List<EmotionResponse>> GetEmotionalAnalysisAsync(Uri uri)
         {
-            var client = new HttpClient();
+            try
+            {
+                return await GetImageAnalysisFromEmotionApiAsync(uri);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private async Task<List<EmotionResponse>> GetImageAnalysisFromEmotionApiAsync(Uri uri)
+        {
             var data = JsonConvert.SerializeObject(new { url = uri.ToString() });
             var request = new HttpRequestMessage
             {
@@ -31,16 +47,18 @@ namespace MFA.Service
                 Method = HttpMethod.Post
             };
 
-            request.Headers.Add("Ocp-Apim-Subscription-Key", _azureSettings.Value.CognitiveServicesEmotionApiHeaderKey);
+            request.Headers.Add(AzureConstants.OcpApimSubscriptionKey, _azureSettings.Value.CognitiveServicesEmotionApiHeaderKey);
             request.Content = new StringContent(data, Encoding.UTF8, MediaTypes.ApplicationJson);
 
-            var response = await client.SendAsync(request);
-            var result = await response.Content.ReadAsStringAsync();
-            var model = JsonConvert.DeserializeObject<List<EmotionResponse>>(result);
-            return result;
+            var FaceApiEndPoint = _azureSettings.Value.CognitiveServicesFaceApiUrl;
+            var response = await _httpClient.Client(nameof(_azureSettings.Value.CognitiveServicesEmotionApiUrl)).SendAsync(request);
+            var resultString = await response.Content.ReadAsStringAsync();
+            var typedModelResult = JsonConvert.DeserializeObject<List<EmotionResponse>>(resultString);
+            return typedModelResult;
         }
+        #endregion
 
-        public Task<string> GetFacialAnalysis(Uri uri)
+        public Task<string> GetFacialAnalysisAsync(Uri uri)
         {
             throw new NotImplementedException();
         }

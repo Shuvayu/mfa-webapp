@@ -4,5 +4,6 @@
     {
         public FaceRectangle FaceRectangle { get; set; }
         public EmotionScores Scores { get; set; }
+        public string EmotionAnalyzed => Scores.FindHighestEmotionScore();
     }
 }

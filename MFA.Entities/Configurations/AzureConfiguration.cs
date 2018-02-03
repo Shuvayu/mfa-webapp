@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MFA.Entities.Confugurations
+﻿namespace MFA.Entities.Configurations
 {
     public class AzureConfiguration
     {

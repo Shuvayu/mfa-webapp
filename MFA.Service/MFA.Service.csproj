@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MFA.Entities\MFA.Entities.csproj" />
+    <ProjectReference Include="..\MFA.IInfrastructure\MFA.IInfrastructure.csproj" />
     <ProjectReference Include="..\MFA.IService\MFA.IService.csproj" />
   </ItemGroup>
 

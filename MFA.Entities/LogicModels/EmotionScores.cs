@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Reflection;
 
 namespace MFA.Entities.LogicModels
 {
@@ -25,9 +23,20 @@ namespace MFA.Entities.LogicModels
         public float Sadness { get; set; }
         public float Surprise { get; set; }
 
-        public String FindHighestEmotionScore()
+        public string FindHighestEmotionScore()
         {
-            string result = string.Empty;
+            var result = string.Empty;
+            var highestNumber = 0.00005;
+            var propertyInfo = typeof(EmotionScores).GetProperties();
+            foreach (PropertyInfo propInfo in propertyInfo)
+            {
+                var propValue = (float)(propInfo.GetValue(this));
+                if (propValue > highestNumber)
+                {
+                    highestNumber = propValue;
+                    result = propInfo.Name;
+                }
+            }
             return result;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using MFA.IService;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MFA.WebApp.Controllers
@@ -17,7 +18,7 @@ namespace MFA.WebApp.Controllers
 
         [HttpGet]
         [Route("api/imageAnalysis/emotionalAnalysis")]
-        public async Task<IActionResult> EmotionalAnalysis(Uri uri)
+        public async Task<IActionResult> EmotionalAnalysisAsync(Uri uri)
         {
             if (uri == null)
             {
@@ -25,13 +26,13 @@ namespace MFA.WebApp.Controllers
             }
             try
             {
-                string analysisResult = await _imageRecognitionService.GetEmotionalAnalysis(uri);
-                return Ok(analysisResult);
+                var analysisResult = await _imageRecognitionService.GetEmotionalAnalysisAsync(uri);
+                return Ok(analysisResult.Select(x => x.EmotionAnalyzed));
             }
             catch (Exception e)
             {
                 return BadRequest(string.Format("Error: {0}", e));
-            }            
+            }
         }
     }
 }

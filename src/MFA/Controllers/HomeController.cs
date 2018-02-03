@@ -8,7 +8,7 @@ namespace MFA.Controllers
 {
     public class HomeController : Controller
     {
-        IImageStorageService _imageStore;
+        private readonly IImageStorageService _imageStore;
 
         public HomeController(IImageStorageService imageStore)
         {
@@ -22,14 +22,14 @@ namespace MFA.Controllers
             return View();
         }
 
-        [HttpPost,ValidateAntiForgeryToken]
-        public async Task<ActionResult> Upload(IFormFile file)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> UploadAsync(IFormFile file)
         {
             if (file != null)
             {
                 var image = file.OpenReadStream();
-                string imageId = await _imageStore.StoreImage(image);
-                return RedirectToAction("Display", new { imageId = imageId});
+                var imageId = await _imageStore.StoreImage(image);
+                return RedirectToAction(nameof(Display), new { imageId = imageId });
             }
 
             return View();
@@ -38,7 +38,7 @@ namespace MFA.Controllers
         public IActionResult Display(string imageId)
         {
             ViewData["Message"] = "Uploaded Image";
-            DisplayViewModel actionModel = new DisplayViewModel()
+            var actionModel = new DisplayViewModel
             {
                 ImageUrl = _imageStore.ImageLink(imageId)
             };
