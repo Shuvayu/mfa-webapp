@@ -32,7 +32,9 @@ namespace MFA
             // Register the IConfiguration instance which MyOptions binds against.
             services.Configure<AzureConfiguration>(Configuration.GetSection(nameof(AzureConfiguration)));
 
+            // Add Infrastructure services
             services.AddSingleton<IHttpClientsFactory, HttpClientsFactory>();
+            services.AddSingleton<IWaitCall, WaitCall>();
 
             // Add Application services
             services.AddTransient<IImageStorageService, ImageStorageService>();

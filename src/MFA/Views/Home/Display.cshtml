@@ -29,7 +29,7 @@
                     url: 'api/imageAnalysis/emotionalAnalysis?Uri=@Model.ImageUrl',
 
                     success: function (msg) {
-                        alert("Msg: " + msg);
+                        PopulateResults(msg);
                     },
                     error: function (request, status, error) {
                         alert(error);
@@ -37,7 +37,11 @@
                 });
             });
         });
-        
-       
+
+        function PopulateResults(value)
+        {
+            $('#textResults').text("Emotion in image : " + value);
+        }
+
     </script>
 }
