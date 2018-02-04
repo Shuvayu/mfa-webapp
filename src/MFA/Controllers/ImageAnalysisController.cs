@@ -9,9 +9,9 @@ namespace MFA.WebApp.Controllers
     [Produces("application/json")]
     public class ImageAnalysisController : Controller
     {
-        private readonly IImageAnalysisService _imageRecognitionService;
+        private readonly IEmotionAnalysisService _imageRecognitionService;
 
-        public ImageAnalysisController(IImageAnalysisService imageRecognitionService)
+        public ImageAnalysisController(IEmotionAnalysisService imageRecognitionService)
         {
             _imageRecognitionService = imageRecognitionService;
         }

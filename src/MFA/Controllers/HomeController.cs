@@ -28,7 +28,7 @@ namespace MFA.Controllers
             if (file != null)
             {
                 var image = file.OpenReadStream();
-                var imageId = await _imageStore.StoreImage(image);
+                var imageId = await _imageStore.StoreImageAsync(image);
                 return RedirectToAction(nameof(Display), new { imageId = imageId });
             }
 

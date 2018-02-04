@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MFA.IService
@@ -13,7 +11,7 @@ namespace MFA.IService
         /// </summary>
         /// <param name="image"></param>
         /// <returns>Image id</returns>
-        Task<string> StoreImage(Stream image);
+        Task<string> StoreImageAsync(Stream image);
 
         /// <summary>
         /// Returns and build the Azure image link

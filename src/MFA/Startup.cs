@@ -38,7 +38,8 @@ namespace MFA
 
             // Add Application services
             services.AddTransient<IImageStorageService, ImageStorageService>();
-            services.AddTransient<IImageAnalysisService, ImageAnalysisService>();
+            services.AddTransient<IEmotionAnalysisService, EmotionAnalysisService>();
+            services.AddTransient<IFaceAnalysisService, FaceAnalysisService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

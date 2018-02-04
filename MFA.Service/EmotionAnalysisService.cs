@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 
 namespace MFA.Service
 {
-    public class ImageAnalysisService : IImageAnalysisService
+    public class EmotionAnalysisService : IEmotionAnalysisService
     {
         private readonly IOptions<AzureConfiguration> _azureSettings;
         private readonly IHttpClientsFactory _httpClient;
 
-        public ImageAnalysisService(IOptions<AzureConfiguration> azureSettings, IHttpClientsFactory httpClientsFactory)
+        public EmotionAnalysisService(IOptions<AzureConfiguration> azureSettings, IHttpClientsFactory httpClientsFactory)
         {
             _azureSettings = azureSettings;
             _httpClient = httpClientsFactory;
@@ -57,10 +57,5 @@ namespace MFA.Service
             return typedModelResult;
         }
         #endregion
-
-        public Task<string> GetFacialAnalysisAsync(Uri uri)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

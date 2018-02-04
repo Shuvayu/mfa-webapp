@@ -15,6 +15,7 @@ namespace MFA.Service
         private readonly Uri _baseBlobUri;
         private readonly CloudBlobClient _blobClient;
         private readonly CloudBlobContainer _container;
+
         public ImageStorageService(IOptions<AzureConfiguration> azureSettings)
         {
             _azureSettings = azureSettings;
@@ -36,7 +37,7 @@ namespace MFA.Service
             return new Uri(_baseBlobUri, $"/{_azureSettings.Value.BlobContainerName}/{imageId}{sasToken}");
         }
 
-        public async Task<string> StoreImage(Stream image)
+        public async Task<string> StoreImageAsync(Stream image)
         {
             var NewBlobName = Guid.NewGuid().ToString();
             var blob = _container.GetBlockBlobReference(NewBlobName);
