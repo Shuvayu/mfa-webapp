@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.IO;
 
 namespace MFA.Entities.LogicModels
@@ -33,6 +34,21 @@ namespace MFA.Entities.LogicModels
                 {
                     imageList.Add(imageStream);
                 }
+            }
+            return imageList;
+        }
+
+        /// <summary>
+        /// Returns all the images uploaded as a stream list.
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        public static List<Stream> GetAllUploadedImages(List<IFormFile> files)
+        {
+            var imageList = new List<Stream>();
+            foreach (var file in files)
+            {
+                imageList.Add(file.OpenReadStream());
             }
             return imageList;
         }

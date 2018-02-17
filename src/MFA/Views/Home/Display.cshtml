@@ -22,25 +22,37 @@
 @section scripts{
     <script>
         $(document).ready(function () {
-            $('#facial-button-trigger').hide();
-            $("#emotion-button-trigger").click(function () {
+            $('#facial-button-trigger').click(function () {
                 $.ajax({
                     type: 'GET',
-                    url: 'api/imageAnalysis/emotionalAnalysis?Uri=@Model.ImageUrl',
+                    url: 'api/facialAnalysisAsync?Uri=@Model.ImageUrl',
 
                     success: function (msg) {
-                        PopulateResults(msg);
+                        PopulateResults(msg,"Face");
                     },
                     error: function (request, status, error) {
                         alert(error);
                     }
                 });
+                });
+
+            $("#emotion-button-trigger").click(function () {
+                $.ajax({
+                    type: 'GET',
+                    url: 'api/emotionalAnalysisAsync?Uri=@Model.ImageUrl',
+
+                    success: function (msg) {
+                        PopulateResults(msg,"Emotion");
+                    },
+                    error: function (request, status, error) {
+                        alert(error);
+                    }
             });
         });
+        });
 
-        function PopulateResults(value)
-        {
-            $('#textResults').text("Emotion in image : " + value);
+        function PopulateResults(value,callType) {
+            $('#textResults').text(callType + " in image : " + value);
         }
 
     </script>

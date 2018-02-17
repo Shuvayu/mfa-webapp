@@ -1,11 +1,13 @@
 ﻿using MFA.Entities.Configurations;
-using MFA.Entities.LogicModels;
 using MFA.IInfrastructure;
 using MFA.IService;
 using Microsoft.Extensions.Options;
 using Microsoft.ProjectOxford.Face;
 using Microsoft.ProjectOxford.Face.Contract;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MFA.Service
@@ -20,31 +22,29 @@ namespace MFA.Service
         {
             _azureSettings = azureSettings;
             _waitCall = waitCall;
-            _faceServiceClient = new FaceServiceClient(_azureSettings.Value.CognitiveServicesFaceApiHeaderKey);
+            _faceServiceClient = new FaceServiceClient(_azureSettings.Value.CognitiveServicesFaceApiHeaderKey, _azureSettings.Value.CognitiveServicesFaceApiUrl);
         }
 
         #region Add Person To Person Group
 
-        public async Task<Guid> AddPersonToPersonGroupAsync(string personGroupId, string personName, string imageDirectory)
+        public async Task<Guid> AddPersonToPersonGroupAsync(string personGroupId, string personName, List<Stream> images)
         {
             try
             {
-                return await AddPersonDetailsAndImagesToPersonGroupAsync(personGroupId, personName, imageDirectory);
+                return await AddPersonDetailsAndImagesToPersonGroupAsync(personGroupId, personName, images);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw;
             }
         }
 
-        private async Task<Guid> AddPersonDetailsAndImagesToPersonGroupAsync(string personGroupId, string personName, string imageDirectory)
+        private async Task<Guid> AddPersonDetailsAndImagesToPersonGroupAsync(string personGroupId, string personName, List<Stream> images)
         {
             await _waitCall.WaitCallLimitPerMinAsync();
             var personDetails = await _faceServiceClient.CreatePersonAsync(personGroupId, personName);
 
-            var faceListStream = ImageExtensions.GetAllImagesInADirectory(imageDirectory);
-
-            foreach (var imageStream in faceListStream)
+            foreach (var imageStream in images)
             {
                 await _waitCall.WaitCallLimitPerMinAsync();
                 await _faceServiceClient.AddPersonFaceAsync(personGroupId, personDetails.PersonId, imageStream);
@@ -63,9 +63,12 @@ namespace MFA.Service
             {
                 await CreateAPersonGroupLogicalContainerAsync(personGroupId, personGroupName);
             }
-            catch (Exception)
+            catch (FaceAPIException e)
             {
-                throw;
+                if (e.ErrorCode != "PersonGroupExists")
+                {
+                    throw;
+                }
             }
         }
 
@@ -76,10 +79,45 @@ namespace MFA.Service
         }
         #endregion
 
-        public Task<string> GetFacialAnalysisAsync(Uri uri)
+        #region Get Facial Analysis
+        public async Task<string> GetFacialAnalysisAsync(Uri uri, string personGroupId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await IdentifyFacesAsync(uri, personGroupId);
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
         }
+
+        private async Task<string> IdentifyFacesAsync(Uri uri, string personGroupId)
+        {
+            _waitCall.AddCallTimeToQueue();
+            var faces = await _faceServiceClient.DetectAsync(uri.ToString());
+            var faceIds = faces.Select(face => face.FaceId).ToArray();
+
+            _waitCall.AddCallTimeToQueue();
+            var results = await _faceServiceClient.IdentifyAsync(personGroupId, faceIds);
+            foreach (var identifyResult in results)
+            {
+                if (identifyResult.Candidates.Length == 0)
+                {
+                    return "No one identified";
+                }
+                else
+                {
+                    var candidateId = identifyResult.Candidates[0].PersonId;
+                    _waitCall.AddCallTimeToQueue();
+                    var person = await _faceServiceClient.GetPersonAsync(personGroupId, candidateId);
+                    return $"Identified as {person.Name}";
+                }
+            }
+            return string.Empty;
+        }
+        #endregion
 
         #region Train Person Group
 
@@ -89,7 +127,7 @@ namespace MFA.Service
             {
                 await TrainFaceApiAsync(personGroupId);
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
                 throw;
@@ -102,6 +140,7 @@ namespace MFA.Service
             while (true)
             {
                 await _waitCall.WaitCallLimitPerMinAsync();
+                await _faceServiceClient.TrainPersonGroupAsync(personGroupId);
                 trainingStatus = await _faceServiceClient.GetPersonGroupTrainingStatusAsync(personGroupId);
 
                 if (trainingStatus.Status != Status.Running)

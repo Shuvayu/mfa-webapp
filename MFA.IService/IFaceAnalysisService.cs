@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace MFA.IService
@@ -10,9 +12,9 @@ namespace MFA.IService
         /// </summary>
         /// <param name="personGroupId"></param>
         /// <param name="personName"></param>
-        /// <param name="ImageDirectory"></param>
+        /// <param name="images"></param>
         /// <returns></returns>
-        Task<Guid> AddPersonToPersonGroupAsync(string personGroupId, string personName, string ImageDirectory);
+        Task<Guid> AddPersonToPersonGroupAsync(string personGroupId, string personName, List<Stream> images);
 
         /// <summary>
         /// Create a person group
@@ -26,8 +28,9 @@ namespace MFA.IService
         /// Gets the facial analysis of the blob uri
         /// </summary>
         /// <param name="uri"></param>
+        /// <param name="personGroupId"></param>
         /// <returns></returns>
-        Task<string> GetFacialAnalysisAsync(Uri uri);
+        Task<string> GetFacialAnalysisAsync(Uri uri, string personGroupId);
 
         /// <summary>
         /// Trains the Face Api to recognise the person Group

@@ -12,6 +12,7 @@
 
         public string CognitiveServicesFaceApiUrl { get; set; }
         public string CognitiveServicesFaceApiHeaderKey { get; set; }
+        public string CognitiveServicesFaceApiGroupId { get; set; }
 
         public int CognitiveServicesApiCallsPerMin { get; set; }
     }

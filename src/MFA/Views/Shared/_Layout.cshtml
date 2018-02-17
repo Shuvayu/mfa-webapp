@@ -27,10 +27,10 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MFA</a>
+                <a asp-area="" asp-controller="FaceAnalysis" asp-action="Index" class="navbar-brand">Face Tranning</a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">                   
-                </ul>
+                <ul class="nav navbar-nav"></ul>
             </div>
         </div>
     </div>
@@ -38,7 +38,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2017 - MFA</p>
+            <p>&copy; @DateTime.Now.Year - MFA</p>
         </footer>
     </div>
 

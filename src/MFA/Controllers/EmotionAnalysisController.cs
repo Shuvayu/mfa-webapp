@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 namespace MFA.WebApp.Controllers
 {
     [Produces("application/json")]
-    public class ImageAnalysisController : Controller
+    public class EmotionAnalysisController : Controller
     {
         private readonly IEmotionAnalysisService _imageRecognitionService;
 
-        public ImageAnalysisController(IEmotionAnalysisService imageRecognitionService)
+        public EmotionAnalysisController(IEmotionAnalysisService imageRecognitionService)
         {
             _imageRecognitionService = imageRecognitionService;
         }
 
         [HttpGet]
-        [Route("api/imageAnalysis/emotionalAnalysis")]
+        [Route("api/emotionalAnalysisAsync")]
         public async Task<IActionResult> EmotionalAnalysisAsync(Uri uri)
         {
             if (uri == null)
