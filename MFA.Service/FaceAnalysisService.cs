@@ -1,6 +1,7 @@
 ﻿using MFA.Entities.Configurations;
 using MFA.IInfrastructure;
 using MFA.IService;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.ProjectOxford.Face;
 using Microsoft.ProjectOxford.Face.Contract;
@@ -16,12 +17,14 @@ namespace MFA.Service
     {
         private readonly IOptions<AzureConfiguration> _azureSettings;
         private readonly FaceServiceClient _faceServiceClient;
+        private readonly ILogger _logger;
         private readonly IWaitCall _waitCall;
 
-        public FaceAnalysisService(IOptions<AzureConfiguration> azureSettings, IWaitCall waitCall)
+        public FaceAnalysisService(IOptions<AzureConfiguration> azureSettings, IWaitCall waitCall, ILoggerFactory logger)
         {
             _azureSettings = azureSettings;
             _waitCall = waitCall;
+            _logger = logger.CreateLogger(nameof(FaceAnalysisService));
             _faceServiceClient = new FaceServiceClient(_azureSettings.Value.CognitiveServicesFaceApiHeaderKey, _azureSettings.Value.CognitiveServicesFaceApiUrl);
         }
 
@@ -33,8 +36,9 @@ namespace MFA.Service
             {
                 return await AddPersonDetailsAndImagesToPersonGroupAsync(personGroupId, personName, images);
             }
-            catch (Exception e)
+            catch (FaceAPIException e)
             {
+                _logger.LogError($"Error => {e.ErrorCode} - {e.ErrorMessage}");
                 throw;
             }
         }
@@ -67,7 +71,7 @@ namespace MFA.Service
             {
                 if (e.ErrorCode != "PersonGroupExists")
                 {
-                    throw;
+                    _logger.LogError($"Error => {e.ErrorCode} - {e.ErrorMessage}");
                 }
             }
         }
@@ -86,8 +90,9 @@ namespace MFA.Service
             {
                 return await IdentifyFacesAsync(uri, personGroupId);
             }
-            catch (Exception e)
+            catch (FaceAPIException e)
             {
+                _logger.LogError($"Error => {e.ErrorCode} - {e.ErrorMessage}");
 
                 throw;
             }
@@ -127,8 +132,9 @@ namespace MFA.Service
             {
                 await TrainFaceApiAsync(personGroupId);
             }
-            catch (Exception e)
+            catch (FaceAPIException e)
             {
+                _logger.LogError($"Error => {e.ErrorCode} - {e.ErrorMessage}");
 
                 throw;
             }

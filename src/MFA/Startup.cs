@@ -28,12 +28,16 @@ namespace MFA
             services.AddMvc();
 
             services.AddOptions();
+            services.AddSingleton<ILoggerFactory, LoggerFactory>();
+            services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
+            services.Configure<DatabaseConnectionStrings>(Configuration.GetSection(nameof(DatabaseConnectionStrings)));
 
             // Register the IConfiguration instance which MyOptions binds against.
             services.Configure<AzureConfiguration>(Configuration.GetSection(nameof(AzureConfiguration)));
 
             // Add Infrastructure services
             services.AddSingleton<IHttpClientsFactory, HttpClientsFactory>();
+            //services.AddSingleton<IHttpProvider, HttpClientProvider>();
             services.AddSingleton<IWaitCall, WaitCall>();
 
             // Add Application services

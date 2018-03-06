@@ -35,8 +35,12 @@ namespace MFA.WebApp.Controllers
                 await _faceAnalysisService.AddPersonToPersonGroupAsync(_azureSettings.Value.CognitiveServicesFaceApiGroupId, model.FaceName, imageList);
                 await _faceAnalysisService.TrainPersonGroupAsync(_azureSettings.Value.CognitiveServicesFaceApiGroupId);
             }
+            else
+            {
+                return RedirectToActionPermanent(nameof(Index), "FaceAnalysis");
+            }
 
-            return RedirectToActionPermanent(nameof(Index));
+            return RedirectToActionPermanent(nameof(Index), "Home");
         }
 
         [HttpGet]
