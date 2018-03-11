@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Speech Testing";
+}
+<h2>@ViewData["Title"].</h2>
+<h3>@ViewData["Message"]</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-12">
+                <form asp-action="UploadAsync" asp-controller="SpeechAnalysis" enctype="multipart/form-data" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="col-md-9">
+                        <input name="speechText" type="text" placeholder="Hi, how are you." required />
+                    </div>
+                    <div class="col-md-3">
+                        <input id="speechText" type="submit" value="Intialise Upload For Speech Testing" />
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-12" id="autoPlayDiv">
+
+            </div>
+            <br />
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        const appendingDiv = "<div id='player'>< audio autoplay hidden><source src='link/to/file/file.mp3' type='audio/mpeg'>If you are reading this, audio isn't supported.</audio></div >";
+    </script>
+}

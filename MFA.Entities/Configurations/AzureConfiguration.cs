@@ -14,6 +14,10 @@
         public string CognitiveServicesFaceApiHeaderKey { get; set; }
         public string CognitiveServicesFaceApiGroupId { get; set; }
 
+        public string CognitiveServicesSpeechApiUrl { get; set; }
+        public string CognitiveServicesSpeechAuthApiUrl { get; set; }
+        public string CognitiveServicesSpeechApiHeaderKey { get; set; }
+
         public int CognitiveServicesApiCallsPerMin { get; set; }
     }
 }

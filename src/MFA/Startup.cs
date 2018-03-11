@@ -37,6 +37,7 @@ namespace MFA
 
             // Add Infrastructure services
             services.AddSingleton<IHttpClientsFactory, HttpClientsFactory>();
+            //services.AddSingleton<HttpClient>(new HttpClient());
             //services.AddSingleton<IHttpProvider, HttpClientProvider>();
             services.AddSingleton<IWaitCall, WaitCall>();
 
@@ -44,6 +45,7 @@ namespace MFA
             services.AddTransient<IImageStorageService, ImageStorageService>();
             services.AddTransient<IEmotionAnalysisService, EmotionAnalysisService>();
             services.AddTransient<IFaceAnalysisService, FaceAnalysisService>();
+            services.AddTransient<ISpeechAnalysisService, SpeechAnalysisService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

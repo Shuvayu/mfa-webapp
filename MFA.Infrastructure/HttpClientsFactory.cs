@@ -21,14 +21,19 @@ namespace MFA.Infrastructure
 
         private void Initialize()
         {
+            SetUpClient(_azureSettings.Value.CognitiveServicesEmotionApiUrl);
+            SetUpClient(_azureSettings.Value.CognitiveServicesSpeechAuthApiUrl);
+            SetUpClient(_azureSettings.Value.CognitiveServicesSpeechApiUrl);
+        }
+
+        private static void SetUpClient(string url)
+        {
             var client = new HttpClient
             {
-                BaseAddress = new Uri(_azureSettings.Value.CognitiveServicesEmotionApiUrl)
+                BaseAddress = new Uri(url)
             };
-            _HttpClients.Add(nameof(_azureSettings.Value.CognitiveServicesEmotionApiUrl), client);
 
-            client.BaseAddress = new Uri(_azureSettings.Value.CognitiveServicesFaceApiUrl);
-            _HttpClients.Add(nameof(_azureSettings.Value.CognitiveServicesFaceApiUrl), client);
+            _HttpClients.Add(url, client);
         }
 
         public Dictionary<string, HttpClient> Clients()

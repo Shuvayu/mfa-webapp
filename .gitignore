@@ -288,3 +288,4 @@ __pycache__/
 *.xsd.cs
 /src/MFA/Properties/PublishProfiles
 /src/MFA/appsettings.json
+/src/MFA/AudioResult

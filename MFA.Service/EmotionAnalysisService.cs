@@ -50,8 +50,7 @@ namespace MFA.Service
             request.Headers.Add(AzureConstants.OcpApimSubscriptionKey, _azureSettings.Value.CognitiveServicesEmotionApiHeaderKey);
             request.Content = new StringContent(data, Encoding.UTF8, MediaTypes.ApplicationJson);
 
-            var FaceApiEndPoint = _azureSettings.Value.CognitiveServicesFaceApiUrl;
-            var response = await _httpClient.Client(nameof(_azureSettings.Value.CognitiveServicesEmotionApiUrl)).SendAsync(request);
+            var response = await _httpClient.Client(_azureSettings.Value.CognitiveServicesEmotionApiUrl).SendAsync(request);
             var resultString = await response.Content.ReadAsStringAsync();
             var typedModelResult = JsonConvert.DeserializeObject<List<EmotionResponse>>(resultString);
             return typedModelResult;
