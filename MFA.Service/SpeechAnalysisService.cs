@@ -54,7 +54,7 @@ namespace MFA.Service
             }
         }
 
-        public async Task ConvertTextToSpeechAsync(string text)
+        public async Task<string> ConvertTextToSpeechAsync(string text)
         {
             try
             {
@@ -76,11 +76,13 @@ namespace MFA.Service
                     {
 
                         var httpStream = await responseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                        using (var file = File.OpenWrite(Path.Combine(Directory.GetCurrentDirectory() + "/AudioResult", $"{ Guid.NewGuid() }.wav")))
+                        var fileName = Guid.NewGuid();
+                        using (var file = File.OpenWrite(Path.Combine(Directory.GetCurrentDirectory() + "/wwwroot/audio", $"{ fileName }.wav")))
                         {
                             httpStream.CopyTo(file);
                             file.Flush();
                         }
+                        return fileName.ToString();
                     }
                     else
                     {

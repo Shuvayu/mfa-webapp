@@ -39,4 +39,14 @@
     <ProjectReference Include="..\..\MFA.Service\MFA.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AudioResult\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\audio\4c6a9619-3689-4d6b-a4f6-e8509aad549d.wav" />
+    <None Include="wwwroot\audio\849ff8ea-b6de-441f-be32-b8eb9319a7c4.wav" />
+    <None Include="wwwroot\audio\b38f7db3-fcf2-48a3-94d0-ce4d2d6349a8.wav" />
+  </ItemGroup>
+
 </Project>

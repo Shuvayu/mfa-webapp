@@ -289,3 +289,4 @@ __pycache__/
 /src/MFA/Properties/PublishProfiles
 /src/MFA/appsettings.json
 /src/MFA/AudioResult
+/src/MFA/wwwroot/audio

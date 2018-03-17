@@ -2,6 +2,7 @@
 using MFA.IService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
 using System.Threading.Tasks;
 
 namespace MFA.WebApp.Controllers
@@ -28,6 +29,26 @@ namespace MFA.WebApp.Controllers
             await _speechAnalysisService.GetAuthTokenAsync();
             await _speechAnalysisService.ConvertTextToSpeechAsync(speechText);
             return Ok("It worked !!!");
+        }
+
+        [HttpGet]
+        [Route("api/speechAnalysisAsync")]
+        public async Task<IActionResult> SpeechAnalysisAsync(string speechText)
+        {
+            if (speechText == null)
+            {
+                return BadRequest("speech text is empty.");
+            }
+            try
+            {
+                await _speechAnalysisService.GetAuthTokenAsync();
+                var fileName = await _speechAnalysisService.ConvertTextToSpeechAsync(speechText);
+                return Ok(fileName);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(string.Format("Error: {0}", e));
+            }
         }
     }
 }

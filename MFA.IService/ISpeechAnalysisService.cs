@@ -13,7 +13,7 @@ namespace MFA.IService
         /// Converts text to speech
         /// </summary>
         /// <param name="text"></param>
-        /// <returns></returns>
-        Task ConvertTextToSpeechAsync(string text);
+        /// <returns> Name of the file</returns>
+        Task<string> ConvertTextToSpeechAsync(string text);
     }
 }
