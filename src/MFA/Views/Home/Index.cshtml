@@ -14,7 +14,7 @@
                         <input type="file" name="file" />
                     </div>
                     <div class="col-md-3">
-                        <input id="facialReco" type="submit" value="Intialise Upload For Facial Recognition" />
+                        <input id="facialReco" type="submit" value="Intialise Upload For Analysis" />
                     </div>
                 </form>
             </div>
@@ -31,26 +31,6 @@
 </div>
 
 @section scripts{
-    <script>
-        $('#uploadedImage').hide();
-        $('#facialReco').hide();
-        $('#imageChoosenText').hide();
-
-        $(function () {
-            $(":file").change(function () {
-                if (this.files && this.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = imageHasBeenLoaded;
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-        });
-
-        function imageHasBeenLoaded(e) {
-            $('#uploadedImage').attr('src', e.target.result);
-            $('#uploadedImage').show();
-            $('#facialReco').show();
-            $('#imageChoosenText').show();
-        };
+    <script src="~/js/home.js">
     </script>
 }

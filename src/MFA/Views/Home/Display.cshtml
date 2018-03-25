@@ -9,6 +9,7 @@
     <div class="pull-right row" style="">
         <button id="emotion-button-trigger"> Emotional Analysis</button>
         <button id="facial-button-trigger"> Facial Analysis</button>
+        <button id="speech-text-button-trigger">Speak Result</button>
     </div>
     <div class="row">
         <div class="col-md-8" style="padding-left: 0px;  padding-right: 0px;">
@@ -18,42 +19,21 @@
             <p id="textResults"></p>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-9" id="autoPlayDiv">
+            </div>
+            <div class="col-md-3">
+            </div>
+        </div>
+    </div>
+    @Html.Hidden("imageUrl", Model.ImageUrl);
 </div>
 @section scripts{
-    <script>
-        $(document).ready(function () {
-            $('#facial-button-trigger').click(function () {
-                $.ajax({
-                    type: 'GET',
-                    url: 'api/facialAnalysisAsync?Uri=@Model.ImageUrl',
-
-                    success: function (msg) {
-                        PopulateResults(msg,"Face");
-                    },
-                    error: function (request, status, error) {
-                        alert(error);
-                    }
-                });
-                });
-
-            $("#emotion-button-trigger").click(function () {
-                $.ajax({
-                    type: 'GET',
-                    url: 'api/emotionalAnalysisAsync?Uri=@Model.ImageUrl',
-
-                    success: function (msg) {
-                        PopulateResults(msg,"Emotion");
-                    },
-                    error: function (request, status, error) {
-                        alert(error);
-                    }
-            });
-        });
-        });
-
-        function PopulateResults(value,callType) {
-            $('#textResults').text(callType + " in image : " + value);
-        }
-
+    <script src="~/js/emotionFunctionality.js">
+    </script>
+    <script src="~/js/faceFunctionality.js">
+    </script>
+    <script src="~/js/speechFunctionality.js">
     </script>
 }
