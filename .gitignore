@@ -290,3 +290,4 @@ __pycache__/
 /src/MFA/appsettings.json
 /src/MFA/AudioResult
 /src/MFA/wwwroot/audio
+/src/MFA/client_secret.json

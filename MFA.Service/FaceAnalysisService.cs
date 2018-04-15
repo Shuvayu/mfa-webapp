@@ -117,7 +117,7 @@ namespace MFA.Service
                     var candidateId = identifyResult.Candidates[0].PersonId;
                     _waitCall.AddCallTimeToQueue();
                     var person = await _faceServiceClient.GetPersonAsync(personGroupId, candidateId);
-                    return $"Identified as {person.Name}";
+                    return $"{person.Name}";
                 }
             }
             return string.Empty;

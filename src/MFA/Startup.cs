@@ -30,10 +30,10 @@ namespace MFA
             services.AddOptions();
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
-            services.Configure<DatabaseConnectionStrings>(Configuration.GetSection(nameof(DatabaseConnectionStrings)));
 
-            // Register the IConfiguration instance which MyOptions binds against.
+            services.Configure<DatabaseConnectionStrings>(Configuration.GetSection(nameof(DatabaseConnectionStrings)));
             services.Configure<AzureConfiguration>(Configuration.GetSection(nameof(AzureConfiguration)));
+            services.Configure<CalendarConfiguration>(Configuration.GetSection(nameof(CalendarConfiguration)));
 
             // Add Infrastructure services
             services.AddSingleton<IHttpClientsFactory, HttpClientsFactory>();
@@ -46,6 +46,8 @@ namespace MFA
             services.AddTransient<IEmotionAnalysisService, EmotionAnalysisService>();
             services.AddTransient<IFaceAnalysisService, FaceAnalysisService>();
             services.AddTransient<ISpeechAnalysisService, SpeechAnalysisService>();
+            services.AddTransient<ICalendarService, GoogleCalendarService>();
+            services.AddTransient<IWorkFlowService, WorkFlowService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

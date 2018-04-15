@@ -21,7 +21,7 @@ namespace MFA.Service
         private readonly CookieContainer _cookieContainer;
         private string _accessToken = string.Empty;
         private string _voiceName = "Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)";
-        private string _locale = "en-US";
+        private string _locale = "en-IN";
 
         private readonly ILogger _logger;
 
