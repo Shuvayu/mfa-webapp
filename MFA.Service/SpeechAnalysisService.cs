@@ -17,18 +17,19 @@ namespace MFA.Service
     public class SpeechAnalysisService : ISpeechAnalysisService
     {
         private readonly IOptions<AzureConfiguration> _azureSettings;
+        private readonly IOptions<AppConfiguration> _appSettings;
         private readonly IHttpClientsFactory _httpClient;
         private readonly CookieContainer _cookieContainer;
         private string _accessToken = string.Empty;
         private string _voiceName = "Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)";
         private string _locale = "en-IN";
-
         private readonly ILogger _logger;
 
 
-        public SpeechAnalysisService(IOptions<AzureConfiguration> azureSettings, IHttpClientsFactory httpClientsFactory, ILoggerFactory logger)
+        public SpeechAnalysisService(IOptions<AzureConfiguration> azureSettings, IOptions<AppConfiguration> appSettings, IHttpClientsFactory httpClientsFactory, ILoggerFactory logger)
         {
             _azureSettings = azureSettings;
+            _appSettings = appSettings;
             _httpClient = httpClientsFactory;
             _logger = logger.CreateLogger(nameof(SpeechAnalysisService));
             _cookieContainer = new CookieContainer();
@@ -39,7 +40,7 @@ namespace MFA.Service
         {
             try
             {
-                await InitiateTokenWorkFlow();
+                await InitiateTokenWorkFlowAsync();
             }
             catch (Exception e)
             {
@@ -48,7 +49,7 @@ namespace MFA.Service
             }
         }
 
-        private async Task InitiateTokenWorkFlow()
+        private async Task InitiateTokenWorkFlowAsync()
         {
             var client = _httpClient.Client(_azureSettings.Value.CognitiveServicesSpeechAuthApiUrl);
             client.DefaultRequestHeaders.Add(AzureConstants.OcpApimSubscriptionKey, _azureSettings.Value.CognitiveServicesSpeechApiHeaderKey);
@@ -87,7 +88,7 @@ namespace MFA.Service
                 request.Headers.Add("Authorization", "Bearer " + _accessToken);
                 request.Headers.Add("X-Search-AppId", Guid.NewGuid().ToString().Replace("-", ""));
                 request.Headers.Add("X-Search-ClientID", Guid.NewGuid().ToString().Replace("-", ""));
-                request.Headers.Add("User-Agent", "MFA-App");
+                request.Headers.Add("User-Agent", _appSettings.Value.ApplicationName);
                 request.Headers.Add("X-Microsoft-OutputFormat", "riff-16khz-16bit-mono-pcm");
                 request.Content = new StringContent(GenerateSsml(_locale, Gender.Female.ToString(), _voiceName, text));
                 var responseMessage = await _httpClient.Client(_azureSettings.Value.CognitiveServicesSpeechApiUrl).SendAsync(request);

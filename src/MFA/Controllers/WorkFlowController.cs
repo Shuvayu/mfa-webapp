@@ -38,7 +38,8 @@ namespace MFA.WebApp.Controllers
             try
             {
                 var analysisResult = await _faceAnalysisService.GetFacialAnalysisAsync(uri, _azureSettings.Value.CognitiveServicesFaceApiGroupId);
-                var workFlowResult = _workFlowService.InitiateWorkflow(analysisResult);
+                var calendarEvents = _calendarService.GetCalendarEvents();
+                var workFlowResult = _workFlowService.InitiateWorkflow(analysisResult, calendarEvents);
                 return Ok(workFlowResult);
             }
             catch (Exception e)

@@ -9,5 +9,6 @@
         public string FarmRoomCalendarId { get; set; }
         public string LoungeRoomCalendarId { get; set; }
         public string MalcolmRoomCalendarId { get; set; }
+        public string BeachRoomName { get; set; }
     }
 }
