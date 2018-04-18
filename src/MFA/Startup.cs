@@ -34,6 +34,7 @@ namespace MFA
             services.Configure<DatabaseConnectionStrings>(Configuration.GetSection(nameof(DatabaseConnectionStrings)));
             services.Configure<AzureConfiguration>(Configuration.GetSection(nameof(AzureConfiguration)));
             services.Configure<CalendarConfiguration>(Configuration.GetSection(nameof(CalendarConfiguration)));
+            services.Configure<AppConfiguration>(Configuration.GetSection(nameof(AppConfiguration)));
 
             // Add Infrastructure services
             services.AddSingleton<IHttpClientsFactory, HttpClientsFactory>();

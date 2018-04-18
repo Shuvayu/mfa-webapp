@@ -1,4 +1,5 @@
 ﻿using MFA.Entities.Configurations;
+using MFA.Entities.Constants;
 using MFA.IInfrastructure;
 using MFA.IService;
 using Microsoft.Extensions.Logging;
@@ -110,7 +111,7 @@ namespace MFA.Service
             {
                 if (identifyResult.Candidates.Length == 0)
                 {
-                    return "No one identified";
+                    return ApplicationConstants.NoOneIdentified;
                 }
                 else
                 {

@@ -34,18 +34,12 @@ namespace MFA.Service
             _cookieContainer = new CookieContainer();
         }
 
+        #region Auth Token WorkFlow
         public async Task GetAuthTokenAsync()
         {
             try
             {
-                var client = _httpClient.Client(_azureSettings.Value.CognitiveServicesSpeechAuthApiUrl);
-                client.DefaultRequestHeaders.Add(AzureConstants.OcpApimSubscriptionKey, _azureSettings.Value.CognitiveServicesSpeechApiHeaderKey);
-                var response = await client.PostAsync(_azureSettings.Value.CognitiveServicesSpeechAuthApiUrl, null);
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    throw new ApplicationException(response.RequestMessage.ToString());
-                }
-                _accessToken = await response.Content.ReadAsStringAsync();
+                await InitiateTokenWorkFlow();
             }
             catch (Exception e)
             {
@@ -54,46 +48,66 @@ namespace MFA.Service
             }
         }
 
+        private async Task InitiateTokenWorkFlow()
+        {
+            var client = _httpClient.Client(_azureSettings.Value.CognitiveServicesSpeechAuthApiUrl);
+            client.DefaultRequestHeaders.Add(AzureConstants.OcpApimSubscriptionKey, _azureSettings.Value.CognitiveServicesSpeechApiHeaderKey);
+            var response = await client.PostAsync(_azureSettings.Value.CognitiveServicesSpeechAuthApiUrl, null);
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new ApplicationException(response.RequestMessage.ToString());
+            }
+            _accessToken = await response.Content.ReadAsStringAsync();
+        }
+        #endregion
+
+        #region Text To Speech Conversion Calls
         public async Task<string> ConvertTextToSpeechAsync(string text)
         {
             try
             {
-                using (var request = new HttpRequestMessage
-                {
-                    RequestUri = new Uri(_azureSettings.Value.CognitiveServicesSpeechApiUrl),
-                    Method = HttpMethod.Post,
-                })
-                {
-                    request.Headers.Add(AzureConstants.OcpApimSubscriptionKey, _azureSettings.Value.CognitiveServicesSpeechApiHeaderKey);
-                    request.Headers.Add("Authorization", "Bearer " + _accessToken);
-                    request.Headers.Add("X-Search-AppId", Guid.NewGuid().ToString().Replace("-", ""));
-                    request.Headers.Add("X-Search-ClientID", Guid.NewGuid().ToString().Replace("-", ""));
-                    request.Headers.Add("User-Agent", "MFA-App");
-                    request.Headers.Add("X-Microsoft-OutputFormat", "riff-16khz-16bit-mono-pcm");
-                    request.Content = new StringContent(GenerateSsml(_locale, Gender.Female.ToString(), _voiceName, text));
-                    var responseMessage = await _httpClient.Client(_azureSettings.Value.CognitiveServicesSpeechApiUrl).SendAsync(request);
-                    if (responseMessage != null && responseMessage.IsSuccessStatusCode)
-                    {
-
-                        var httpStream = await responseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                        var fileName = Guid.NewGuid();
-                        using (var file = File.OpenWrite(Path.Combine(Directory.GetCurrentDirectory() + "/wwwroot/audio", $"{ fileName }.wav")))
-                        {
-                            httpStream.CopyTo(file);
-                            file.Flush();
-                        }
-                        return fileName.ToString();
-                    }
-                    else
-                    {
-                        throw new ApplicationException(responseMessage.RequestMessage.ToString());
-                    }
-                }
+                return await InitiateCallForTextToSpeechConversionAsync(text);
             }
             catch (Exception e)
             {
                 _logger.LogError($"Error => Inner :{e.InnerException} => Message :{e.Message}");
                 throw;
+            }
+        }
+
+        private async Task<string> InitiateCallForTextToSpeechConversionAsync(string text)
+        {
+            using (var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(_azureSettings.Value.CognitiveServicesSpeechApiUrl),
+                Method = HttpMethod.Post,
+            })
+            {
+                request.Headers.Add(AzureConstants.OcpApimSubscriptionKey, _azureSettings.Value.CognitiveServicesSpeechApiHeaderKey);
+                request.Headers.Add("Authorization", "Bearer " + _accessToken);
+                request.Headers.Add("X-Search-AppId", Guid.NewGuid().ToString().Replace("-", ""));
+                request.Headers.Add("X-Search-ClientID", Guid.NewGuid().ToString().Replace("-", ""));
+                request.Headers.Add("User-Agent", "MFA-App");
+                request.Headers.Add("X-Microsoft-OutputFormat", "riff-16khz-16bit-mono-pcm");
+                request.Content = new StringContent(GenerateSsml(_locale, Gender.Female.ToString(), _voiceName, text));
+                var responseMessage = await _httpClient.Client(_azureSettings.Value.CognitiveServicesSpeechApiUrl).SendAsync(request);
+                if (responseMessage != null && responseMessage.IsSuccessStatusCode)
+                {
+
+                    var httpStream = await responseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    var fileName = Guid.NewGuid();
+                    using (var file = File.OpenWrite(Path.Combine(Directory.GetCurrentDirectory() + "/wwwroot/audio", $"{ fileName }.wav")))
+                    {
+                        httpStream.CopyTo(file);
+                        file.Flush();
+                    }
+                    return fileName.ToString();
+                }
+                else
+                {
+                    _logger.LogError($"Error => Inner :{responseMessage.RequestMessage.ToString()}");
+                    throw new ApplicationException(responseMessage.RequestMessage.ToString());
+                }
             }
         }
 
@@ -117,5 +131,6 @@ namespace MFA.Service
                       text)));
             return ssmlDoc.ToString();
         }
+        #endregion
     }
 }

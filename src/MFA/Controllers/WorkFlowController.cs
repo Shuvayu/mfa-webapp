@@ -23,7 +23,7 @@ namespace MFA.WebApp.Controllers
         }
         public IActionResult Index()
         {
-            //var calendarEvents = _calendarService.GetCalendarEvents();
+            var calendarEvents = _calendarService.GetCalendarEvents();
             return View();
         }
 

@@ -2,11 +2,11 @@
 {
     public class TextReponse
     {
-        public static string WelcomeText(string CientName, string ContatName) => $@"Hi {CientName}, welcome to Formation Technologies. 
-                                                                                     I have informed {ContatName}, of your arrival.
+        public static string WelcomeText(string companyName, string cientName, string contatName) => $@"Hi {cientName}, welcome to {companyName}. 
+                                                                                     I have informed {contatName}, of your arrival.
                                                                                      Please have a seat till they arrive.";
 
-        public static string NonRecorgnizedWelcomeText() => $@"Hi there, welcome to Formation Technologies. 
+        public static string NonRecorgnizedWelcomeText(string companyName) => $@"Hi there, welcome to {companyName}. 
                                                                                      I have informed the reception, of your arrival.
                                                                                      Please have a seat till they arrive.";
     }
