@@ -80,6 +80,7 @@ namespace MFA.Service
             var request = _googleCalendarService.Events.List(calendarId);
             request.TimeMin = DateTime.Now;
             request.TimeMax = DateTime.Now.AddHours(12);
+            request.TimeZone = "Australia/Sydney";
             request.ShowDeleted = false;
             request.SingleEvents = true;
             request.MaxResults = 10;

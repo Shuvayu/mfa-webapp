@@ -29,7 +29,7 @@ namespace MFA.WebApp.Controllers
 
         [HttpGet]
         [Route("api/workFlowAsync")]
-        public async Task<IActionResult> EmotionalAnalysisAsync(Uri uri)
+        public async Task<IActionResult> WorkFlowAnalysisAsync(Uri uri)
         {
             if (uri == null)
             {
